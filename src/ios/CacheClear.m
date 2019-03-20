@@ -1,4 +1,5 @@
 #import "CacheClear.h"
+#import <WebKit/WKWebsiteDataStore.h>
 
 @implementation CacheClear
 
@@ -14,7 +15,16 @@
     // NSArray* arguments = command.arguments;
 
     [self.commandDelegate runInBackground:^{
-      [[NSURLCache sharedURLCache] removeAllCachedResponses];
+        [[NSURLCache sharedURLCache] removeAllCachedResponses];
+        NSSet *websiteDataTypes
+        = [NSSet setWithArray:@[
+                                WKWebsiteDataTypeDiskCache,
+                                WKWebsiteDataTypeOfflineWebApplicationCache,
+                                WKWebsiteDataTypeMemoryCache,
+                                ]];
+        NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
+        [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:websiteDataTypes modifiedSince:dateFrom completionHandler:^{
+        }];
       [self success];
     }];
 }

@@ -2,6 +2,9 @@ Cache Clear
 =============
 
 This is a WebView cache plugin for Cordova 6.1.1+ supporting Android (>=4.1) and iOS(>=6.0).
+
+Updated for supporting WKWebview in ios.
+-------------
 It allows to clear the cordova webview cache.
 
 There is one method:
