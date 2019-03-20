@@ -16,7 +16,7 @@ Installation
 You may use Cordova CLI as follows:
 
 <pre>
-cordova plugin add cordova-plugin-cache-clear
+cordova plugin add https://github.com/DiRaiks/cordova-plugin-cache-clear.git
 </pre>
 
 Usage
