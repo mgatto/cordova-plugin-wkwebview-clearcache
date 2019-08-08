@@ -1,40 +1,40 @@
-Cache Clear
+WK Cache Clear
 =============
 
-This is a WebView cache plugin for Cordova 6.1.1+ supporting Android (>=4.1) and iOS(>=6.0).
+WKCacheClear selectively clears the WkWebView cache for Cordova 9 running on iOS 9 or above. 
 
-Updated for supporting WKWebview in ios.
--------------
-It allows to clear the cordova webview cache.
+Derived from Anrip Wong's CacheClear plugin https://github.com/anrip/cordova-plugin-cache-clear. This plugin was rewritten to specifically support WkWebView on iOS, whose cache clearing mechanics differ from UIWebView. Android support was not considered, since WkWebView is specific to iOS.
 
-There is one method:
-
-* CacheClear(successCallback, errorCallback)
 
 Installation
 ======
-You may use Cordova CLI as follows:
+Using the standard Cordova CLI:
 
 <pre>
-cordova plugin add https://github.com/DiRaiks/cordova-plugin-cache-clear.git
+cordova plugin add https://github.com/mgatto/cordova-plugin-wkwebview-clearcache.git
 </pre>
 
 Usage
 ====
 ```javascript
 document.addEventListener('deviceready', function() {
-    var success = function(status) {
-        alert('Message: ' + status);
-    };
-    var error = function(status) {
-        alert('Error: ' + status);
-    };
-    window.CacheClear(success, error);
+    window.WkCacheClear({delete: ['cookies','assets']}, () => '', (error) => '');
 });
 ```
 
-Android vs. iOS
-======
+Options
+-------
 
-On iOS, CacheClear deletes temporary files (images that have been downloaded by the app).
-On Android, CacheClear also deletes all local, persistent data (such as stored files and any data saved to localStorage).
+* `delete`: an array of plain-text aliases for `WkWebSiteDataType` constants:
+
+    **Supported:**
+    * *(included automatically)* WKWebsiteDataTypeMemoryCache
+    * `cookies` => WKWebsiteDataTypeCookies 
+    * `assets` => WKWebsiteDataTypeDiskCache (HTML, JS and image files cached from the Cordova bundle)
+        
+    **Unsupported:**
+    - WKWebsiteDataTypeOfflineWebApplicationCache
+    - WKWebsiteDataTypeLocalStorage
+    - WKWebsiteDataTypeSessionStorage
+    - WKWebsiteDataTypeIndexedDBDatabases
+    - WKWebsiteDataTypeWebSQLDatabases
