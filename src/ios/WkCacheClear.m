@@ -13,9 +13,9 @@
 // @TODO test for iOS 9 or above
 
     self.command = command;
+
     NSArray* arguments = command.arguments;
     if ([command.arguments count] > 0) {
-        // @TODO deal with the options arg; in JS, its ab object: {delete: ['cookies','diskcache']}
         NSDictionary* options = [arguments objectAtIndex:0];
         NSArray* cachesToDelete = [options objectForKey:@"delete"];
     }
@@ -24,9 +24,11 @@
 
         NSMutableSet *websiteDataTypes = [NSMutableSet setWithArray:@[WKWebsiteDataTypeMemoryCache,WKWebsiteDataTypeOfflineWebApplicationCache]];
 
+//@TODO cachesToDelete may not exist when the optons array is not passed!
         if ([cachesToDelete containsObject:@"cookies"]) {
+
             // only delete OUR cookies!!
-            WKWebsiteDataStore *dataStore = [WKWebsiteDataStore WKWebsiteDataTypeCookies];
+            WKWebsiteDataStore *dataStore = [WKWebsiteDataStore,WKWebsiteDataTypeCookies];
             [dataStore fetchDataRecordsOfTypes:[WKWebsiteDataStore allWebsiteDataTypes]  // allWebsiteDataTypes
                              completionHandler:^(NSArray<WKWebsiteDataRecord *> * _Nonnull records) {
                                  for (WKWebsiteDataRecord *record  in records) {
