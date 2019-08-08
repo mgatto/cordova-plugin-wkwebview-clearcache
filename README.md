@@ -29,11 +29,11 @@ Options
 
     **Supported:**
     * *(included automatically)* WKWebsiteDataTypeMemoryCache
+    * *(included automatically)* WKWebsiteDataTypeOfflineWebApplicationCache
     * `cookies` => WKWebsiteDataTypeCookies 
     * `assets` => WKWebsiteDataTypeDiskCache (HTML, JS and image files cached from the Cordova bundle)
         
     **Unsupported:**
-    - WKWebsiteDataTypeOfflineWebApplicationCache
     - WKWebsiteDataTypeLocalStorage
     - WKWebsiteDataTypeSessionStorage
     - WKWebsiteDataTypeIndexedDBDatabases

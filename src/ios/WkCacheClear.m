@@ -9,6 +9,9 @@
 {
     NSLog(@"Cordova iOS WkCacheClear() called.");
 
+
+// @TODO test for iOS 9 or above
+
     self.command = command;
     NSArray* arguments = command.arguments;
     if ([command.arguments count] > 0) {
@@ -19,22 +22,9 @@
 
     [self.commandDelegate runInBackground:^{
 
-        //WKWebsiteDataTypeDiskCache,
-        //WKWebsiteDataTypeOfflineWebApplicationCache,
-        //WKWebsiteDataTypeMemoryCache,
-        //WKWebsiteDataTypeLocalStorage,
-        //WKWebsiteDataTypeCookies,
-        //WKWebsiteDataTypeSessionStorage,
-        //WKWebsiteDataTypeIndexedDBDatabases,
-        //WKWebsiteDataTypeWebSQLDatabases,
-        //WKWebsiteDataTypeFetchCache, //(iOS 11.3, *)
-        //WKWebsiteDataTypeServiceWorkerRegistrations, //(iOS 11.3, *)
-
-        NSMutableSet *websiteDataTypes = [NSMutableSet setWithArray:@[WKWebsiteDataTypeMemoryCache]];
+        NSMutableSet *websiteDataTypes = [NSMutableSet setWithArray:@[WKWebsiteDataTypeMemoryCache,WKWebsiteDataTypeOfflineWebApplicationCache]];
 
         if ([cachesToDelete containsObject:@"cookies"]) {
-            //[websiteDataTypes addObject:WKWebsiteDataTypeCookies];  nah, see below
-
             // only delete OUR cookies!!
             WKWebsiteDataStore *dataStore = [WKWebsiteDataStore WKWebsiteDataTypeCookies];
             [dataStore fetchDataRecordsOfTypes:[WKWebsiteDataStore allWebsiteDataTypes]  // allWebsiteDataTypes
@@ -91,5 +81,17 @@
     // send cordova result
     [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
 }
+
+
+//WKWebsiteDataTypeDiskCache,
+//WKWebsiteDataTypeOfflineWebApplicationCache,
+//WKWebsiteDataTypeMemoryCache,
+//WKWebsiteDataTypeLocalStorage,
+//WKWebsiteDataTypeCookies,
+//WKWebsiteDataTypeSessionStorage,
+//WKWebsiteDataTypeIndexedDBDatabases,
+//WKWebsiteDataTypeWebSQLDatabases,
+//WKWebsiteDataTypeFetchCache, //(iOS 11.3, *)
+//WKWebsiteDataTypeServiceWorkerRegistrations, //(iOS 11.3, *)
 
 @end
