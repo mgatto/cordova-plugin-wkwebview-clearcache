@@ -4,7 +4,7 @@
 
 #import "AppDelegate.h"
 
-@interface CacheClear : CDVPlugin
+@interface WkCacheClear : CDVPlugin
 {
 }
 
