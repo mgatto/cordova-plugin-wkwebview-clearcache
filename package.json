@@ -6,15 +6,15 @@
         "email": "",
         "url": ""
     },
-    "homepage": "https://github.com/mgatto/cordova-plugin-cache-clear",
+    "homepage": "https://github.com/mgatto/cordova-plugin-wkwebview-clearcache",
     "description": "This plugin can selectively clear the WkWebView cache for Cordova 9.0.0+ supporting iOS(>=9.0). Derived from Anrip Wong's CacheClear plugin https://github.com/anrip/cordova-plugin-cache-clear . This plugin was rewritten to specifically support WkWebView, whose cache clearing mechanics differ from UIWebView. Android support was not considered, since WkWebView is specific to iOS.",
     "license": "Apache License Version 2.0",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/mgatto/cordova-plugin-cache-clear.git"
+        "url": "git+https://github.com/mgatto/cordova-plugin-wkwebview-clearcache.git"
     },
     "bugs": {
-        "url": "https://github.com/mgatto/cordova-plugin-cache-clear/issues"
+        "url": "https://github.com/mgatto/cordova-plugin-wkwebview-clearcache/issues"
     },
     "keywords": [
         "cordova",
@@ -26,7 +26,7 @@
         "cordova-ios"
     ],
     "cordova": {
-        "id": "cordova-plugin-cache-clear",
+        "id": "cordova-plugin-wkwebview-clearcache",
         "platforms": [
             "ios"
         ]
