@@ -18,7 +18,6 @@
     }
 
     [self.commandDelegate runInBackground:^{
-        //[[NSURLCache sharedURLCache] removeAllCachedResponses];
 
         //WKWebsiteDataTypeDiskCache,
         //WKWebsiteDataTypeOfflineWebApplicationCache,
@@ -56,11 +55,6 @@
         if ([cachesToDelete containsObject:@"assets"]) {  // or diskcache
             [websiteDataTypes addObject:WKWebsiteDataTypeDiskCache];
         }
-
-        NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
-        [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:websiteDataTypes modifiedSince:dateFrom completionHandler:^{
-            // Done
-        }];
 
         // @TODO get a passed in date from client, which could be the BuildDate from the BuildInfo or Device plugins?
         NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
