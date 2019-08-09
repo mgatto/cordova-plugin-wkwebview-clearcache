@@ -2,36 +2,44 @@
 #import <WebKit/WKWebsiteDataStore.h>
 
 @implementation WkCacheClear
-
 @synthesize command;
+
 
 - (void)task:(CDVInvokedUrlCommand *)command
 {
-    NSLog(@"Cordova iOS WkCacheClear() called.");
+    NSLog(@"Cordova iOS WkCacheClear() called");
 
+    @try {
+        self.command = command;
 
-// @TODO test for iOS 9 or above
+        // if (floor(NSFoundationVersionNumber) >= NSFoundationVersionNumber_iOS_9_0) {
+        if (floor(NSFoundationVersionNumber) < NSFoundationVersionNumber_iOS_9_0) {
+            NSLog(@"iOS version is too old: %f", NSFoundationVersionNumber);
+            @throw [[NSException alloc] initWithName:@"iOSVersionTooOld" reason:[NSString stringWithFormat:@"iOS version is too old: %f", NSFoundationVersionNumber] userInfo:nil];
+        }
+        /*else {
 
-    self.command = command;
+        }*/
 
-    NSArray* arguments = command.arguments;
-    if ([command.arguments count] > 0) {
+        NSArray* cachesToDelete;
+        NSArray* arguments = command.arguments;
         NSDictionary* options = [arguments objectAtIndex:0];
-        NSArray* cachesToDelete = [options objectForKey:@"delete"];
-    }
 
-    [self.commandDelegate runInBackground:^{
+        if ( ![options isKindOfClass:[NSNull class]] ) {
+            cachesToDelete = [options objectForKey:@"delete"];
+        }
 
+        //NSLog(@"delete options = %@", cachesToDelete);
         NSMutableSet *websiteDataTypes = [NSMutableSet setWithArray:@[WKWebsiteDataTypeMemoryCache,WKWebsiteDataTypeOfflineWebApplicationCache]];
 
-//@TODO cachesToDelete may not exist when the optons array is not passed!
         if ([cachesToDelete containsObject:@"cookies"]) {
+            NSLog(@"cookies will be cleared");
 
-            // only delete OUR cookies!!
-            WKWebsiteDataStore *dataStore = [WKWebsiteDataStore,WKWebsiteDataTypeCookies];
-            [dataStore fetchDataRecordsOfTypes:[WKWebsiteDataStore allWebsiteDataTypes]  // allWebsiteDataTypes
+            WKWebsiteDataStore *dataStore = [WKWebsiteDataStore defaultDataStore];
+            [dataStore fetchDataRecordsOfTypes:[WKWebsiteDataStore allWebsiteDataTypes]
                              completionHandler:^(NSArray<WKWebsiteDataRecord *> * _Nonnull records) {
                                  for (WKWebsiteDataRecord *record  in records) {
+                                    // only delete OUR cookies!!
                                      if ( [record.displayName containsString:@"ewinerysolutions.com"]) {
                                          [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:record.dataTypes
                                                                                    forDataRecords:@[record]
@@ -43,46 +51,48 @@
                              }];
         }
 
-        //@TODO do similar to the cookies above and restrict to only our app
-        if ([cachesToDelete containsObject:@"assets"]) {  // or diskcache
+        if ([cachesToDelete containsObject:@"assets"]) {
             [websiteDataTypes addObject:WKWebsiteDataTypeDiskCache];
+            NSLog(@"assets will be cleared");
         }
 
         // @TODO get a passed in date from client, which could be the BuildDate from the BuildInfo or Device plugins?
         NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
-        [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:websiteDataTypes modifiedSince:dateFrom completionHandler:^{
-            //NSLog(@"Cordova iOS webview cache cleared.");
-        }];
+        [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:websiteDataTypes modifiedSince:dateFrom completionHandler:^{}];
 
-      [self success];
-    }];
+        [self success];
+
+    }@catch (NSException *exception) {
+        NSLog(@"%@", exception);
+        [self error:[NSString stringWithFormat:@"EXCEPTION: %@", exception.reason]];
+    }
 }
+
 
 - (void)success
 {
     NSString *resultMsg = @"Cordova iOS wkwebview cache cleared.";
     NSLog(@"%@", resultMsg);
 
-    // create a cordova result
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                messageAsString:[resultMsg stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+                                                messageAsString:[resultMsg stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet] ]];
 
-    // send cordova result
     [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
 }
+
 
 - (void)error:(NSString *)message
 {
     NSString *resultMsg = [NSString stringWithFormat:@"Error while clearing wkwebview cache (%@).", message];
     NSLog(@"%@", resultMsg);
 
-    // create cordova result
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                messageAsString:[resultMsg stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+                                                messageAsString:[resultMsg stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet] ]];
 
-    // send cordova result
     [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
 }
+
+@end
 
 
 //WKWebsiteDataTypeDiskCache,
@@ -95,5 +105,3 @@
 //WKWebsiteDataTypeWebSQLDatabases,
 //WKWebsiteDataTypeFetchCache, //(iOS 11.3, *)
 //WKWebsiteDataTypeServiceWorkerRegistrations, //(iOS 11.3, *)
-
-@end
