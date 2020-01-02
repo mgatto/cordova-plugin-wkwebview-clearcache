@@ -3,7 +3,7 @@ var exec = require('cordova/exec');
 /**
  * Usage:
  * 
- * window.WkCacheClear({delete: ['cookies','assets'], 'domain': 'example.com'}, () => '', (error) => '');
+ * window.WkCacheClear({'domain': 'example.com', delete: ['cookies','assets']}, () => '', (error) => '');
  * 
  * options object is required.
  *   domain setting is required

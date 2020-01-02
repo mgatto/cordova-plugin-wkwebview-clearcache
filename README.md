@@ -18,14 +18,15 @@ Usage
 ====
 ```javascript
 document.addEventListener('deviceready', function() {
-    window.WkCacheClear({delete: ['cookies','assets']}, () => '', (error) => '');
+    window.WkCacheClear({domain: 'example.com', delete: ['cookies','assets']}, (msg) => '', (error) => '');
 });
 ```
 
 Options
 -------
 
-* `delete`: an array of plain-text aliases for `WkWebSiteDataType` constants:
+* `domain`: Required. A domain name string: "example.com" or "sub.domain.com". Omit slashes and protocols, like "http:". Required, since the user may not like cookies for other sites being deleted in Safari
+* `delete`: Optional. an array of plain-text aliases for `WkWebSiteDataType` constants:
 
     **Supported:**
     * *(included automatically)* WKWebsiteDataTypeMemoryCache
